@@ -4,6 +4,9 @@ import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
 import dotenv from "dotenv";
 import { prisma } from "./db/index.js";
+import userRouter from "./routes/user.router.js";
+import movieRouter from "./routes/movie.router.js";
+import wishlistRouter from "./routes/wishlist.router.js";
 
 dotenv.config();
 
@@ -24,10 +27,6 @@ app.get("/", (c) => {
 });
 
 // api routing
-import userRouter from "./routes/user.router.js";
-import movieRouter from "./routes/movie.router.js";
-import wishlistRouter from "./routes/wishlist.router.js";
-
 app.route("/api/v1/user/", userRouter);
 app.route("/api/v1/movie/", movieRouter);
 app.route("/api/v1/wishlist/", wishlistRouter);
