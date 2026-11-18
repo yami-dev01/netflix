@@ -91,8 +91,10 @@ export const getTrendingMovies = async (c: Context) => {
 };
 
 
-export const getOnlyMovies = async (c: Context) => {
+export const getOnlyMovies = async(c: Context) => {
     try {
+        const page = Math.max(1, Number(c.req.query("page")) || 1);
+
         const response = await axios.get(
             "https://api.themoviedb.org/3/discover/movie",
             {
@@ -100,7 +102,7 @@ export const getOnlyMovies = async (c: Context) => {
                     include_adult: false,
                     include_video: false,
                     language: "en-US",
-                    page: 1,
+                    page,
                     sort_by: "popularity.desc"
                 },
                 headers: {
@@ -117,7 +119,6 @@ export const getOnlyMovies = async (c: Context) => {
 
     } catch (e) {
         console.log(e);
-
         return c.json({
             success: false,
             message: "Couldn't fetch movies from TMDB"
@@ -126,14 +127,17 @@ export const getOnlyMovies = async (c: Context) => {
 };
 
 
+
 export const WebSeries = async (c: Context) => {
     try {
+        const page = Number(c.req.query("page")) || 1;
+
         const response = await axios.get(
             "https://api.themoviedb.org/3/discover/tv",
             {
                 params: {
                     language: "en-US",
-                    page: 1,
+                    page,
                     sort_by: "popularity.desc"
                 },
                 headers: {
@@ -157,3 +161,4 @@ export const WebSeries = async (c: Context) => {
         }, 500);
     }
 };
+

@@ -4,25 +4,31 @@ import type { MovieResponse , Movie , TVSeries, MovieDetailsData } from "@share/
 
 
 
-
-export const getAllMovies = async () => {
-    const response = await axios.get<{ data: MovieResponse }>(
+export const getAllMovies = async ({ pageParam }: { pageParam: number }) => {
+    const response = await axios.get(
         "http://localhost:8080/api/v1/movie/movies",
-        { withCredentials: true }
+        {
+            params: {
+                page: pageParam
+            },
+            withCredentials: true
+        }
     );
 
-    return response.data.data.results;
+    return response.data.data;
 };
 
 
-export const getTVSeries = async () => {
-    const response = await axios.get<{ data: { results: TVSeries[] } }>(
-        "http://localhost:8080/api/v1/movie/series",
+
+export const getTVSeries = async ({ pageParam }: { pageParam: number }) => {
+    const response = await axios.get(
+        `http://localhost:8080/api/v1/movie/series?page=${pageParam}`,
         { withCredentials: true }
     );
 
-    return response.data.data.results;
+    return response.data.data;
 };
+
 
 
 export const getDiscoverMovies = async () => {

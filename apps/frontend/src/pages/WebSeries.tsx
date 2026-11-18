@@ -1,19 +1,61 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import DiscoverNavbar from "../components/DiscoverNavbar";
 import { getTVSeries } from "../queries/queryFunction";
 
 export default function WebSeries() {
     const navigate = useNavigate();
+    const observerTarget = useRef<HTMLDivElement>(null);
 
-    const { data: series = [], isLoading, isError } = useQuery({
+    const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
         queryKey: ["tv-series"],
         queryFn: getTVSeries,
-        staleTime: 10 * 60 * 1000,
+        initialPageParam: 1,
+
+        getNextPageParam: (lastPage) => {
+            if (lastPage.page < lastPage.total_pages) {
+                return lastPage.page + 1;
+            }
+            return undefined;
+        },
+
+        staleTime: 10 * 60 * 1000
     });
 
-    if (isLoading){
+    // Combine all pages into one series array
+    const series = data?.pages.flatMap(
+        (page) => page.results
+    ) ?? [];
+
+    // Observe the bottom of the page
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (
+                    entries[0].isIntersecting &&
+                    hasNextPage &&
+                    !isFetchingNextPage
+                ) {
+                    fetchNextPage();
+                }
+            },
+            { threshold: 0.5 }
+        );
+
+        const target = observerTarget.current;
+
+        if (target) {
+            observer.observe(target);
+        }
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
                 Loading TV series...
@@ -21,7 +63,7 @@ export default function WebSeries() {
         );
     }
 
-    if (isError){
+    if (isError) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
                 Failed to load TV series.
@@ -68,6 +110,22 @@ export default function WebSeries() {
                             </p>
                         </div>
                     ))}
+                </div>
+
+                {/* Intersection Observer Target */}
+                <div
+                    ref={observerTarget}
+                    className="flex h-20 items-center justify-center"
+                >
+                    {isFetchingNextPage && (
+                        <p>Loading more TV series...</p>
+                    )}
+
+                    {!hasNextPage && (
+                        <p className="text-gray-500">
+                            No more TV series.
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
