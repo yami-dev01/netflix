@@ -1,4 +1,4 @@
-import type { Movie } from "../types/movie";
+import type { Movie } from "@share/types";
 import MovieCard from "./MovieCard";
 
 interface MovieRowProps {

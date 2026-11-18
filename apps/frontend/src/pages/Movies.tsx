@@ -1,9 +1,10 @@
-
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import DiscoverNavbar from "../components/DiscoverNavbar";
 import MovieCard from "../components/MovieCard";
-import { getAllMovies } from "../queries/queryFunction";
+import { getAllMovies } from "../services/apis/movieSeriesApis";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 export default function Movies() {
     const observerTarget = useRef<HTMLDivElement>(null);
@@ -50,17 +51,13 @@ export default function Movies() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
-                Loading movies...
-            </div>
+            <Loading />
         );
     }
 
     if (isError) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
-                Failed to load movies.
-            </div>
+            <Error />
         );
     }
 

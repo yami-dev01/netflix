@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import type { Movie } from "../types/movie";
+import { Axios } from "../services/axiosInstance"; 
+import type { Movie, MovieDetailsData } from "@share/types";
 
 interface HeroProps {
     movie: Movie | null;
@@ -10,7 +9,6 @@ interface HeroProps {
 
 export default function DiscoverHero({ movie }: HeroProps) {
     const navigate = useNavigate();
-
     const [loading, setLoading] = useState(false);
 
     if (!movie) return null;
@@ -19,24 +17,21 @@ export default function DiscoverHero({ movie }: HeroProps) {
         try {
             setLoading(true);
 
-            const response = await axios.get(
-                `http://localhost:8080/api/v1/movie/details/${movie.id}`,
-                {
-                    withCredentials: true
-                }
+            const response = await Axios.get<{ data: MovieDetailsData }>(
+                `/movie/details/${movie.id}`
             );
 
-            const videos = response.data.data.videos.results;
+            const videos = response.data.data.videos?.results ?? [];
 
             const trailer =
                 videos.find(
-                    (video: any) =>
+                    (video) =>
                         video.site === "YouTube" &&
                         video.type === "Trailer" &&
                         video.official
                 ) ||
                 videos.find(
-                    (video: any) =>
+                    (video) =>
                         video.site === "YouTube" &&
                         video.type === "Trailer"
                 );
@@ -50,10 +45,9 @@ export default function DiscoverHero({ movie }: HeroProps) {
             } else {
                 alert("No trailer available for this movie.");
             }
-
+            setLoading(false);
         } catch (error) {
-            console.error("Failed to fetch trailer:", error);
-        } finally {
+            console.log("Failed to fetch trailer:", error);
             setLoading(false);
         }
     };
@@ -68,17 +62,13 @@ export default function DiscoverHero({ movie }: HeroProps) {
             style={{
                 backgroundImage: movie.backdrop_path
                     ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
-                    : "none"
+                    : "none",
             }}
         >
-            {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-linear-to-r from-black via-black/60 to-transparent" />
-
             <div className="absolute inset-0 bg-linear-to-t from-[#141414] via-transparent to-black/20" />
 
-            {/* Hero Content */}
             <div className="relative z-10 flex h-full flex-col justify-center px-8 md:px-16">
-
                 <h1 className="max-w-2xl text-4xl font-extrabold text-white md:text-6xl">
                     {movie.title}
                 </h1>
@@ -87,20 +77,14 @@ export default function DiscoverHero({ movie }: HeroProps) {
                     <span className="text-green-400">
                         TMDB Rating: {movie.vote_average.toFixed(1)}
                     </span>
-
-                    <span>
-                        {movie.release_date?.split("-")[0]}
-                    </span>
+                    <span>{movie.release_date?.split("-")[0]}</span>
                 </div>
 
                 <p className="mt-4 max-w-xl text-sm leading-relaxed text-white md:text-base">
                     {movie.overview}
                 </p>
 
-                {/* Buttons */}
                 <div className="mt-6 flex gap-3">
-
-                    {/* Play Button */}
                     <button
                         onClick={handlePlay}
                         disabled={loading}
@@ -110,7 +94,6 @@ export default function DiscoverHero({ movie }: HeroProps) {
                         {loading ? "Loading..." : "Play"}
                     </button>
 
-                    {/* More Info Button */}
                     <button
                         onClick={handleMoreInfo}
                         className="flex items-center gap-2 rounded bg-gray-500/70 px-7 py-3 font-bold text-white transition hover:bg-gray-500/90"
@@ -118,9 +101,7 @@ export default function DiscoverHero({ movie }: HeroProps) {
                         <span>ⓘ</span>
                         More Info
                     </button>
-
                 </div>
-
             </div>
         </section>
     );

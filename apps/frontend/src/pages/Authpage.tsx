@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +6,7 @@ export default function Authpage() {
 
     const navigate = useNavigate();
 
-    const [isLogin, setIsLogin] = useState<boolean>(true);
+    const [hasAccount, setHasAccount] = useState<boolean>(true);
     const [userName, setUserName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -15,7 +14,7 @@ export default function Authpage() {
         e.preventDefault();
 
         try {
-            const endpoint = isLogin ? "http://localhost:8080/api/v1/user/signin" : "http://localhost:8080/api/v1/user/signup";
+            const endpoint = hasAccount ? "http://localhost:8080/api/v1/user/signin" : "http://localhost:8080/api/v1/user/signup";
 
             const response = await axios.post(
                 endpoint,
@@ -26,17 +25,10 @@ export default function Authpage() {
                 { withCredentials: true }
             );
 
-            console.log(response.data);
             navigate("/discover");
 
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error(
-                    error.response?.data || error.message
-                );
-            } else {
-                console.error(error);
-            }
+        }catch(error) {
+            error
         }
     };
 
@@ -54,7 +46,7 @@ export default function Authpage() {
             <div className="relative z-10 w-full max-w-md rounded-lg bg-black/80 p-10 text-white">
 
                 <h1 className="mb-8 text-3xl font-bold">
-                    {isLogin ? "Sign In" : "Sign Up"}
+                    {hasAccount ? "Sign In" : "Sign Up"}
                 </h1>
 
                 <form
@@ -86,23 +78,23 @@ export default function Authpage() {
                         type="submit"
                         className="mt-3 rounded bg-[#e50914] py-3 font-bold transition hover:bg-[#c11119]"
                     >
-                        {isLogin ? "Sign In" : "Sign Up"}
+                        {hasAccount ? "Sign In" : "Sign Up"}
                     </button>
                 </form>
 
                 {/* Toggle Login / Signup */}
                 <p className="mt-8 text-gray-400">
-                    {isLogin
+                    {hasAccount
                         ? "New to Netflix?"
                         : "Already have an account?"
                     }
 
                     <button
                         type="button"
-                        onClick={() => setIsLogin(!isLogin)}
+                        onClick={() => setHasAccount(!hasAccount)}
                         className="ml-2 font-semibold text-white hover:underline"
                     >
-                        {isLogin ? "Sign up now." : "Sign in now."}
+                        {hasAccount ? "Sign up now." : "Sign in now."}
                     </button>
                 </p>
 

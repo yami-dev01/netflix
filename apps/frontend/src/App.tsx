@@ -9,8 +9,6 @@ import WebSeries from "./pages/WebSeries"
 
 
 function App() {
-  
-
   return (
     <BrowserRouter>
       <Routes>
@@ -20,7 +18,7 @@ function App() {
         <Route path="/movie/:movieId" element={<MovieDetails />}/>
         <Route path="/wishlist" element = {<Wishlist />} />
         <Route path="/movies" element = {<Movies />} />
-        <Route path="/WebSeries" element = {<WebSeries />} />
+        <Route path="/webseries" element = {<WebSeries />} />
       </Routes>
     </BrowserRouter>
   )

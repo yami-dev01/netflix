@@ -1,7 +1,8 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { getWishlistMovies } from "../queries/queryFunction";
+import { getWishlistMovies } from "../services/apis/wishlist";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 export default function Wishlist() {
     const navigate = useNavigate();
@@ -13,17 +14,13 @@ export default function Wishlist() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
-                Loading wishlist...
-            </div>
+            <Loading />
         );
     }
 
     if (isError) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
-                Failed to load wishlist.
-            </div>
+            <Error />
         );
     }
 

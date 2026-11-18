@@ -1,7 +1,9 @@
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
-import { getMovieDetails, addToWishlist } from "../queries/queryFunction";
+import { getMovieDetails } from "../services/apis/movieSeriesApis";
+import { addToWishlist } from "../services/apis/wishlist";
+import Loading from "../components/Loading";
+import Error from "../components/Error";
 
 export default function MovieDetails() {
     const { movieId } = useParams();
@@ -25,26 +27,13 @@ export default function MovieDetails() {
 
     if (isLoading) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#141414] text-white">
-                Loading movie details...
-            </div>
+            <Loading />
         );
     }
 
     if (isError || !movie) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-[#141414] text-white">
-                <h1 className="text-3xl font-bold">
-                    Movie not found
-                </h1>
-
-                <button
-                    onClick={() => navigate("/")}
-                    className="mt-5 rounded bg-red-600 px-5 py-2"
-                >
-                    Go Home
-                </button>
-            </div>
+            <Error />
         );
     }
 

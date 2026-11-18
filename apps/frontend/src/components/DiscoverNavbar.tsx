@@ -2,8 +2,6 @@ import { Link } from "react-router-dom"
 import { Search, ChevronDown } from "lucide-react";
 
 export default function DiscoverNavbar() {
-
-
     return (
         <nav className="absolute top-0 z-50 flex h-20 w-full items-center justify-between bg-linear-to-b from-black/90 to-transparent px-6 md:px-12">
 
@@ -21,7 +19,7 @@ export default function DiscoverNavbar() {
                 <div className="hidden items-center gap-6 text-sm md:flex">
                     <Link to="/discover" className="font-bold text-white">Home </Link>
                     <Link to="/movies" className="text-gray-300 transition hover:text-white">Movies </Link>
-                    <Link to="/WebSeries" className="text-gray-300 transition hover:text-white">TV Shows </Link>
+                    <Link to="/webSeries" className="text-gray-300 transition hover:text-white">TV Shows </Link>
                     <Link to="/wishlist" className="text-gray-300 transition hover:text-white">wishlist </Link>
 
                 </div>
