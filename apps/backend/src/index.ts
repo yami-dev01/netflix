@@ -35,14 +35,14 @@ app.route("/api/v1/wishlist/", wishlistRouter);
 // Start server
 const startServer = async () => {
     try {
-        await prisma.$connect();
-        console.log("Database connected");
         serve({
             fetch: app.fetch,
             port: PORT
         });
         console.log(`Server running on port ${PORT}`);
 
+        await prisma.$connect();
+        console.log("Database connected");
     } catch (error) {
         console.error("Failed to start server:", error);
         process.exit(1);

@@ -12,11 +12,8 @@ export const addToWishlist = async(c : Context) => {
         }
 
         const userId = Number(c.get("userId"));
-        if(!userId){
-            throw new Error("please sign in")
-        }
 
-        const addMovieToWishlist = await prisma.wishlist.create({
+        const newWishlistMovie = await prisma.wishlist.create({
             data : {
                 userId : userId,
                 movieId : movieId
@@ -25,14 +22,14 @@ export const addToWishlist = async(c : Context) => {
 
         return c.json({
             message : "added to wishlist",
-            data : addMovieToWishlist
+            data : newWishlistMovie
         }, 200)
 
 
     }catch(e){
-        console.log(e);
         return c.json({
-            message : "couldnt add to wishlist"
+            message : "couldnt add to wishlist",
+            e: e
         }, 500)
     }
 }
@@ -49,20 +46,14 @@ export const deleteFromWishlist = async(c : Context) => {
 
         const userId : number = Number(c.get("userId"));
 
-        if (!Number.isInteger(userId)) {
-            return c.json({
-                message: "Please sign in"
-            }, 401);
-        }
-
-        const movieExists = await prisma.wishlist.findFirst({
+        const isMovieInWishlist = await prisma.wishlist.findFirst({
             where: {
                 userId,
                 movieId
             }
         });
 
-        if (!movieExists) {
+        if (!isMovieInWishlist) {
             return c.json({
                 message: "Movie not found in your wishlist"
             }, 404);
@@ -70,7 +61,7 @@ export const deleteFromWishlist = async(c : Context) => {
 
         await prisma.wishlist.delete({
             where: {
-                id: movieExists.id
+                id: isMovieInWishlist.id
             }
         });
 
@@ -79,9 +70,9 @@ export const deleteFromWishlist = async(c : Context) => {
         }, 200);
 
     }catch(e){
-        console.error(e);
         return c.json({
-            message: "Couldn't remove movie from wishlist"
+            message: "Couldn't remove movie from wishlist",
+            e: e
         }, 500);
     }
 }
@@ -95,21 +86,19 @@ export const moviesFromWishList = async(c : Context) => {
             throw new Error("please sign in")
         }
 
-        const wishlistMovies = await prisma.wishlist.findMany({
+        const allWishlistMovies = await prisma.wishlist.findMany({
             where : {
                 userId : userId
             }
         })
 
         return c.json({
-            wishlistMovies
+            allWishlistMovies
         }, 200)
-
-
     }catch(e){
-        console.log(e);
         return c.json({
-            data : "couldnt fetch movies from your wishlist"
+            data : "couldnt fetch movies from your wishlist",
+            e: e
         }, 500)
     }
 }

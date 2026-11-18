@@ -1,29 +1,27 @@
-
-import axios from "axios";
 import type { Context } from "hono";
-
+import { Axios } from "../utils/axiosInstance";
+import type { MovieResponse, MovieDetailsData, TVSeries, } from "@share/types";
 
 export const discover = async (c: Context) => {
     try {
-        const TMDB_TOKEN = process.env.TMDB_TOKEN;
-        const options = {
-            method: "GET",
-            url: "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc",
-            headers: {
-                accept: "application/json",
-                Authorization: `Bearer ${TMDB_TOKEN}`
-            }
-        };
+        const movieData = await Axios.get<MovieResponse>("/discover/movie", {
+            params: {
+                include_adult: false,
+                include_video: false,
+                language: "en-US",
+                page: 1,
+                sort_by: "popularity.desc",
+            },
+        });
 
-        const movieData = await axios.request(options);
         return c.json({
-            data: movieData.data
+            data: movieData.data,
         }, 200);
 
     } catch (e) {
-        console.log(e);
         return c.json({
-            data: "couldnt fetch data from tmdb"
+            message: "couldnt fetch data from tmdb",
+            error: e,
         }, 500);
     }
 };
@@ -32,30 +30,24 @@ export const discover = async (c: Context) => {
 export const getMovieById = async (c: Context) => {
     try {
         const movieId = c.req.param("movieId");
-        const response = await axios.get(
-            `https://api.themoviedb.org/3/movie/${movieId}`,
-            {
-                params: {
-                    language: "en-US",
-                    append_to_response: "credits,videos,similar,recommendations",
-                    include_video_language: "en,null"
-                },
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${process.env.TMDB_TOKEN}`
-                }
-            }
-        );
+
+        const response = await Axios.get<MovieDetailsData>(`/movie/${movieId}`, {
+            params: {
+                language: "en-US",
+                append_to_response: "credits,videos,similar,recommendations",
+                include_video_language: "en,null",
+            },
+        });
 
         return c.json({
             success: true,
-            data: response.data
+            data: response.data,
         }, 200);
 
     } catch (e) {
-        console.log(e);
         return c.json({
-            message: "couldnt fetch movie data"
+            message: "couldnt fetch movie data",
+            error: e,
         }, 500);
     }
 };
@@ -63,102 +55,80 @@ export const getMovieById = async (c: Context) => {
 
 export const getTrendingMovies = async (c: Context) => {
     try {
-        const response = await axios.get(
-            "https://api.themoviedb.org/3/trending/movie/day",
-            {
-                params: {
-                    language: "en-US"
-                },
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${process.env.TMDB_TOKEN}`
-                }
-            }
-        );
+        const response = await Axios.get<MovieResponse>("/trending/movie/day", {
+            params: {
+                language: "en-US",
+            },
+        });
 
         return c.json({
             success: true,
-            data: response.data
+            data: response.data,
         }, 200);
 
     } catch (e) {
-        console.log(e);
         return c.json({
-            success: false,
-            message: "Couldn't fetch trending movies from TMDB"
+            message: "Couldn't fetch trending movies from TMDB",
+            error:  "Unknown error",
         }, 500);
     }
 };
 
 
-export const getOnlyMovies = async(c: Context) => {
+export const getOnlyMovies = async (c: Context) => {
     try {
         const page = Math.max(1, Number(c.req.query("page")) || 1);
 
-        const response = await axios.get(
-            "https://api.themoviedb.org/3/discover/movie",
-            {
-                params: {
-                    include_adult: false,
-                    include_video: false,
-                    language: "en-US",
-                    page,
-                    sort_by: "popularity.desc"
-                },
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${process.env.TMDB_TOKEN}`
-                }
-            }
-        );
+        const response = await Axios.get<MovieResponse>("/discover/movie", {
+            params: {
+                include_adult: false,
+                include_video: false,
+                language: "en-US",
+                page,
+                sort_by: "popularity.desc",
+            },
+        });
 
         return c.json({
             success: true,
-            data: response.data
+            data: response.data,
         }, 200);
 
     } catch (e) {
-        console.log(e);
         return c.json({
-            success: false,
-            message: "Couldn't fetch movies from TMDB"
+            message: "Couldn't fetch movies from TMDB",
+            error: "Unknown error",
         }, 500);
     }
 };
-
 
 
 export const WebSeries = async (c: Context) => {
     try {
-        const page = Number(c.req.query("page")) || 1;
+        const page = Math.max(1, Number(c.req.query("page")) || 1);
 
-        const response = await axios.get(
-            "https://api.themoviedb.org/3/discover/tv",
-            {
-                params: {
-                    language: "en-US",
-                    page,
-                    sort_by: "popularity.desc"
-                },
-                headers: {
-                    accept: "application/json",
-                    Authorization: `Bearer ${process.env.TMDB_TOKEN}`
-                }
-            }
-        );
+        const response = await Axios.get<{
+            page: number;
+            results: TVSeries[];
+            total_pages: number;
+            total_results: number;
+        }>("/discover/tv", {
+            params: {
+                language: "en-US",
+                page,
+                sort_by: "popularity.desc",
+            },
+        });
 
         return c.json({
             success: true,
-            data: response.data
+            data: response.data,
         }, 200);
 
     } catch (e) {
-        console.log(e);
-
         return c.json({
-            success: false,
-            message: "Couldn't fetch TV series from TMDB"
+            message: "Couldn't fetch TV series from TMDB",
+            error:  e,
         }, 500);
     }
 };
-
