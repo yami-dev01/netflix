@@ -1,15 +1,15 @@
-import { Axios } from "../axiosInstance";
+import { api } from "../axiosInstance";
 import type { Movie , WishlistEntry } from "@share/types"
 
 export const addToWishlist = async (movieId: string) => {
-    const response = await Axios.post(`/wishlist/add/${movieId}`, {});
+    const response = await api.post(`/wishlist/add/${movieId}`, {});
 
     return response.data;
 };
 
 
 export const getWishlistMovies = async () => {
-    const wishlistResponse = await Axios.get<{
+    const wishlistResponse = await api.get<{
         wishlistMovies: WishlistEntry[];
     }>("/wishlist/");
 
@@ -17,7 +17,7 @@ export const getWishlistMovies = async () => {
     const wishlistDetails: Movie[] = [];
 
     for (const entry of wishlistEntries) {
-        const response = await Axios.get<{ data: Movie }>(
+        const response = await api.get<{ data: Movie }>(
             `/movie/details/${entry.movieId}`
         );
 

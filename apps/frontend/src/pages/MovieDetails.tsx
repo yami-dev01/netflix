@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { getMovieDetails } from "../services/apis/movieSeriesApis";
-import { addToWishlist } from "../services/apis/wishlist";
+import { addToWishlist } from "../services/apis/wishlistApis";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 

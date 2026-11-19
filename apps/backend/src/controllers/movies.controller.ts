@@ -1,10 +1,10 @@
 import type { Context } from "hono";
-import { Axios } from "../utils/axiosInstance";
+import { api } from "../utils/axiosInstance";
 import type { MovieResponse, MovieDetailsData, TVSeries, } from "@share/types";
 
 export const discover = async (c: Context) => {
     try {
-        const movieData = await Axios.get<MovieResponse>("/discover/movie", {
+        const movieData = await api.get<MovieResponse>("/discover/movie", {
             params: {
                 include_adult: false,
                 include_video: false,
@@ -31,7 +31,7 @@ export const getMovieById = async (c: Context) => {
     try {
         const movieId = c.req.param("movieId");
 
-        const response = await Axios.get<MovieDetailsData>(`/movie/${movieId}`, {
+        const response = await api.get<MovieDetailsData>(`/movie/${movieId}`, {
             params: {
                 language: "en-US",
                 append_to_response: "credits,videos,similar,recommendations",
@@ -55,7 +55,7 @@ export const getMovieById = async (c: Context) => {
 
 export const getTrendingMovies = async (c: Context) => {
     try {
-        const response = await Axios.get<MovieResponse>("/trending/movie/day", {
+        const response = await api.get<MovieResponse>("/trending/movie/day", {
             params: {
                 language: "en-US",
             },
@@ -79,7 +79,7 @@ export const getOnlyMovies = async (c: Context) => {
     try {
         const page = Math.max(1, Number(c.req.query("page")) || 1);
 
-        const response = await Axios.get<MovieResponse>("/discover/movie", {
+        const response = await api.get<MovieResponse>("/discover/movie", {
             params: {
                 include_adult: false,
                 include_video: false,
@@ -107,7 +107,7 @@ export const WebSeries = async (c: Context) => {
     try {
         const page = Math.max(1, Number(c.req.query("page")) || 1);
 
-        const response = await Axios.get<{
+        const response = await api.get<{
             page: number;
             results: TVSeries[];
             total_pages: number;

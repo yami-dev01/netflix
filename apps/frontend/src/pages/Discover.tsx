@@ -4,7 +4,7 @@ import DiscoverHero from "../components/DiscoverHero";
 import MovieRow from "../components/MovieRow";
 import Loading from "../components/Loading"
 import { getDiscoverMovies, getTrendingMovies } from "../services/apis/movieSeriesApis";
-import { getWishlistMovies } from "../services/apis/wishlist" 
+import { getWishlistMovies } from "../services/apis/wishlistApis" 
 
 
 export default function Homepage() {

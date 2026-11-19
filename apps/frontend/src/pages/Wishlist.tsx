@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { getWishlistMovies } from "../services/apis/wishlist";
+import { getWishlistMovies } from "../services/apis/wishlistApis";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 
