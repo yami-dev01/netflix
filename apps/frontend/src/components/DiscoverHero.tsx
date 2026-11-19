@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { api } from "../services/axiosInstance"; 
 import type { Movie, MovieDetailsData } from "@share/types";
 
@@ -53,7 +53,12 @@ export default function DiscoverHero({ movie }: HeroProps) {
     };
 
     const handleMoreInfo = () => {
-        navigate(`/movie/${movie.id}`);
+        navigate({
+            to : "/movie/$movieId",
+            params : {
+                movieId: String(movie.id),
+            }
+        })
     };
 
     return (

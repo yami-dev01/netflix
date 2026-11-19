@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { getWishlistMovies } from "../services/apis/wishlistApis";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
@@ -39,7 +39,9 @@ export default function Wishlist() {
                     {movies.map((movie) => (
                         <div
                             key={movie.id}
-                            onClick={() => navigate(`/movie/${movie.id}`)}
+                            onClick={() => navigate({
+                                to : `/movie/${movie.id}`
+                            })}
                             className="cursor-pointer"
                         >
                             <img

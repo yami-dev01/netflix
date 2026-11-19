@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import DiscoverNavbar from "../components/DiscoverNavbar";
 import { getTVSeries } from "../services/apis/movieSeriesApis";
 import Loading from "../components/Loading";
@@ -81,7 +81,9 @@ export default function WebSeries() {
                     {series.map((show) => (
                         <div
                             key={show.id}
-                            onClick={() => navigate(`/movie/${show.id}`)}
+                            onClick={() => navigate({
+                                to : `/movie/${show.id}`
+                            })}
                             className="cursor-pointer"
                         >
                             <img

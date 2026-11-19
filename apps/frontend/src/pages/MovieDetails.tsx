@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "@tanstack/react-router";
 import { getMovieDetails } from "../services/apis/movieSeriesApis";
 import { addToWishlist } from "../services/apis/wishlistApis";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 
 export default function MovieDetails() {
-    const { movieId } = useParams();
+    const { movieId } = useParams({
+        from : `/movie/$movieId`
+    });
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -66,7 +68,9 @@ export default function MovieDetails() {
                 <div className="absolute inset-0 bg-linear-to-t from-[#141414] via-black/40 to-black/20" />
 
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate({
+                        to : "/discover"
+                    })}
                     className="absolute left-8 top-8 z-10 rounded-full bg-black/60 px-5 py-2 hover:bg-black"
                 >
                     ← Back

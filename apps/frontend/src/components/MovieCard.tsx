@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { Movie } from "@share/types"
 
 interface MovieCardProps {
@@ -11,7 +11,9 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
     return (
         <div
-            onClick={() => navigate(`/movie/${movie.id}`)}
+            onClick={() => navigate({
+                to : `/movie/${movie.id}`
+            })}
             className="group min-w-45 cursor-pointer transition duration-300 hover:scale-105"
         >
             <div className="overflow-hidden rounded-lg">

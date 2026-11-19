@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function Authpage() {
 
@@ -25,7 +25,9 @@ export default function Authpage() {
                 { withCredentials: true }
             );
 
-            navigate("/discover");
+            navigate({
+                to : "/discover"
+            });
 
         }catch(error) {
             error

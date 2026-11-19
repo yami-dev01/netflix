@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "@tanstack/react-router"
 
 export default function Error() {
     const navigate = useNavigate();
@@ -7,7 +7,9 @@ export default function Error() {
             <h1 className="text-3xl font-bold">
                 An Error Occured!
             </h1>
-            <button onClick={() => navigate("/discover")} className="mt-5 rounded bg-red-600 px-5 py-2">
+            <button className="mt-5 rounded bg-red-600 px-5 py-2" onClick={() => navigate({
+                to : "/discover"
+            })}>
                 Go Home
             </button>
         </div>
