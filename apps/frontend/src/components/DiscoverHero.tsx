@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Axios } from "../services/axiosInstance"; 
+import { api } from "../services/axiosInstance"; 
 import type { Movie, MovieDetailsData } from "@share/types";
 
 interface HeroProps {
@@ -17,7 +17,7 @@ export default function DiscoverHero({ movie }: HeroProps) {
         try {
             setLoading(true);
 
-            const response = await Axios.get<{ data: MovieDetailsData }>(
+            const response = await api.get<{ data: MovieDetailsData }>(
                 `/movie/details/${movie.id}`
             );
 
